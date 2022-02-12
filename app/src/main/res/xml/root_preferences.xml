@@ -1,0 +1,35 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/preference_category_general">
+
+        <SwitchPreferenceCompat
+            app:key="preference_start_on_boot"
+            app:defaultValue="true"
+            app:title="@string/preference_start_on_boot_title"
+            app:summary="@string/preference_start_on_boot_summary" />
+
+        <EditTextPreference
+            app:key="preference_ca_bundle_path"
+            app:title="@string/preference_ca_bundle_path_title"
+            app:summary="@string/preference_ca_bundle_path_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/preference_category_server">
+
+        <EditTextPreference
+            app:key="preference_proxy_ip"
+            app:defaultValue="127.0.0.1"
+            app:title="@string/preference_proxy_ip_title"
+            app:summary="@string/preference_proxy_ip_summary" />
+
+        <EditTextPreference
+            app:key="preference_proxy_port"
+            app:defaultValue="8080"
+            app:title="@string/preference_proxy_port_title"
+            app:summary="@string/preference_proxy_port_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

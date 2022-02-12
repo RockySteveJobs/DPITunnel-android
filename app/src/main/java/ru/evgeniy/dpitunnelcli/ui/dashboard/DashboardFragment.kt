@@ -1,0 +1,111 @@
+package ru.evgeniy.dpitunnelcli.ui.dashboard
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import ru.evgeniy.dpitunnelcli.R
+import ru.evgeniy.dpitunnelcli.data.usecases.DaemonUseCase
+import ru.evgeniy.dpitunnelcli.data.usecases.FetchAllProfilesUseCase
+import ru.evgeniy.dpitunnelcli.data.usecases.ProxyUseCase
+import ru.evgeniy.dpitunnelcli.data.usecases.SettingsUseCase
+import ru.evgeniy.dpitunnelcli.databinding.FragmentDashboardBinding
+import ru.evgeniy.dpitunnelcli.utils.Constants
+import android.content.Intent
+import ru.evgeniy.dpitunnelcli.ui.activity.settings.SettingsActivity
+
+
+class DashboardFragment : Fragment() {
+
+    private var _binding: FragmentDashboardBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    private val dashboardViewModel by viewModels<DashboardViewModel> {
+        DashboardViewModelFactory(
+            daemonUseCase = DaemonUseCase(
+                execPath = requireContext().applicationInfo.nativeLibraryDir + '/' + Constants.DPITUNNEL_BINARY_NAME,
+                pidFilePath = Constants.DPITUNNEL_DAEMON_PID_FILE),
+            fetchAllProfilesUseCase = FetchAllProfilesUseCase(requireContext().applicationContext),
+            settingsUseCase = SettingsUseCase(requireContext().applicationContext),
+            proxyUseCase = ProxyUseCase()
+        )
+    }
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val imageViewStatus = binding.dashboardStatusCardImage
+
+        val progressBarLoading = binding.dashboardStatusCardProgress
+
+        val buttonSettings = binding.dashboardStatusCardSettings
+        buttonSettings.setOnClickListener {
+            val intent = Intent(requireContext(), SettingsActivity::class.java)
+            requireContext().startActivity(intent)
+        }
+
+        val buttonStartStop = binding.dashboardStatusCardStartStop
+        buttonStartStop.setOnClickListener {
+            dashboardViewModel.startStop()
+        }
+
+        val buttonRestart = binding.dashboardStatusCardRestart
+        buttonRestart.setOnClickListener{
+            dashboardViewModel.restart()
+        }
+
+        dashboardViewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DashboardViewModel.UIState.Loading -> {
+                    progressBarLoading.visibility = View.VISIBLE
+                    imageViewStatus.visibility = View.INVISIBLE
+                    buttonStartStop.isClickable = false
+                    buttonRestart.isClickable = false
+                }
+                is DashboardViewModel.UIState.Running -> {
+                    progressBarLoading.visibility = View.GONE
+                    imageViewStatus.visibility = View.VISIBLE
+                    imageViewStatus.setImageDrawable(AppCompatResources.getDrawable(requireContext().applicationContext, R.drawable.ic_check_circle_white_96dp))
+                    imageViewStatus.setBackgroundColor(ContextCompat.getColor(requireContext().applicationContext, R.color.green_300))
+                    buttonStartStop.text = getText(R.string.button_status_stop_text)
+                    buttonStartStop.setIconResource(R.drawable.ic_stop_black_24)
+                    buttonStartStop.isClickable = true
+                    buttonRestart.isClickable = true
+                }
+                is DashboardViewModel.UIState.Stopped -> {
+                    progressBarLoading.visibility = View.GONE
+                    imageViewStatus.visibility = View.VISIBLE
+                    imageViewStatus.setImageDrawable(AppCompatResources.getDrawable(requireContext().applicationContext, R.drawable.ic_cancel_white_96dp))
+                    imageViewStatus.setBackgroundColor(ContextCompat.getColor(requireContext().applicationContext, R.color.red_300))
+                    buttonStartStop.text = getText(R.string.button_status_start_text)
+                    buttonStartStop.setIconResource(R.drawable.ic_play_black_24dp)
+                    buttonStartStop.isClickable = true
+                    buttonRestart.isClickable = true
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
