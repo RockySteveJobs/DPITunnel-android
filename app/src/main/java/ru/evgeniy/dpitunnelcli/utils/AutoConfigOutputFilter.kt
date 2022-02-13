@@ -14,16 +14,19 @@ class AutoConfigOutputFilter(private val resourceStrings: ResourceStrings, priva
 
     private var _defaults: AutoConfigDefaults? = null
 
-    private val _configuredProfile = MutableStateFlow<ConfiguredProfileState>(ConfiguredProfileState.InProcess(null))
+    private val _outputFlow = MutableStateFlow<String?>(null)
+    val output: StateFlow<String?> = _outputFlow
+
+    private val _configuredProfile = MutableStateFlow<ConfiguredProfileState>(ConfiguredProfileState.InProcess)
     val configuredProfile: StateFlow<ConfiguredProfileState> = _configuredProfile
 
     fun feed(output: String) {
         _output.append(output)
         processOutput()
-        _configuredProfile.value = ConfiguredProfileState.InProcess(if (_enableSimpleOutput)
+        _outputFlow.value = if (_enableSimpleOutput)
             _outputSimple.toString()
         else
-            _output.toString())
+            _output.toString()
     }
     
     fun reset(defaults: AutoConfigDefaults? = null) {
@@ -36,21 +39,23 @@ class AutoConfigOutputFilter(private val resourceStrings: ResourceStrings, priva
         _output.append(input)
         if (!isAutoComplete)
             _outputSimple.append(input)
-        _configuredProfile.value = ConfiguredProfileState.InProcess(if (_enableSimpleOutput)
+
+        _outputFlow.value = if (_enableSimpleOutput)
             _outputSimple.toString()
         else
-            _output.toString())
+            _output.toString()
+
         _input(input)
     }
 
     fun showFull() {
         _enableSimpleOutput = false
-        _configuredProfile.value = ConfiguredProfileState.InProcess(_output.toString())
+        _outputFlow.value = _output.toString()
     }
 
     fun showSimple() {
         _enableSimpleOutput = true
-        _configuredProfile.value = ConfiguredProfileState.InProcess(_outputSimple.toString())
+        _outputFlow.value = _outputSimple.toString()
     }
 
     private fun processOutput() {
@@ -110,7 +115,7 @@ class AutoConfigOutputFilter(private val resourceStrings: ResourceStrings, priva
     )
 
     sealed class ConfiguredProfileState {
-        data class InProcess(val output: String?) : ConfiguredProfileState()
+        object InProcess : ConfiguredProfileState()
         data class Success(val configuredProfile: ConfiguredProfile): ConfiguredProfileState()
         object Error : ConfiguredProfileState()
     }

@@ -145,8 +145,13 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
                 when(state) {
                     is AutoConfigOutputFilter.ConfiguredProfileState.Success -> loadConfiguredProfile(state.configuredProfile)
                     is AutoConfigOutputFilter.ConfiguredProfileState.Error -> {}
-                    is AutoConfigOutputFilter.ConfiguredProfileState.InProcess -> state.output?.let { _autoConfigOutput.postValue(it) }
+                    is AutoConfigOutputFilter.ConfiguredProfileState.InProcess -> {}
                 }
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            _outputFiler.output.collect {
+                it?.let { _autoConfigOutput.postValue(it) }
             }
         }
     }
