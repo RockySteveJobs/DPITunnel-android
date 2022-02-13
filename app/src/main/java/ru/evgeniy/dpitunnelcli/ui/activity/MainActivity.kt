@@ -2,12 +2,14 @@ package ru.evgeniy.dpitunnelcli.ui.activity
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.topjohnwu.superuser.Shell
 import ru.evgeniy.dpitunnelcli.R
 import ru.evgeniy.dpitunnelcli.databinding.ActivityMainBinding
 import ru.evgeniy.dpitunnelcli.preferences.AppPreferences
@@ -18,8 +20,22 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    init {
+        Shell.setDefaultBuilder(Shell.Builder.create()
+            .setFlags(Shell.FLAG_REDIRECT_STDERR)
+            .setTimeout(10)
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Shell.getShell { shell ->
+            if (!shell.isRoot) {
+                Toast.makeText(this, R.string.no_root_failed, Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
 
         AppPreferences.setDefaults(this)
         val appPreferences = AppPreferences.getInstance(this)

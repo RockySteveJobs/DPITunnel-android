@@ -15,5 +15,5 @@ sealed class DaemonState {
     object Running: DaemonState()
     object Stopped: DaemonState()
     object Loading: DaemonState()
-    class Error(e: Throwable): DaemonState()
+    class Error(exitCode: Int): DaemonState()
 }

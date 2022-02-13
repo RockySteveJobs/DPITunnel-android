@@ -1,5 +1,6 @@
 package ru.evgeniy.dpitunnelcli.cli
 
+import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.evgeniy.dpitunnelcli.domain.entities.Profile
@@ -12,17 +13,11 @@ class CliDaemon(private val execPath: String,
     val daemonState: StateFlow<DaemonState> = _daemonState
 
     fun check() {
-        kotlin.runCatching {
-            val p = ProcessBuilder(listOf("su",
-                "-c",
-                "[ -f /proc/\$(cat \"$pidFilePath\")/status ]"))
-                .start()
-            p.waitFor()
-            return if (p.exitValue() == 0)
-                _daemonState.value = DaemonState.Running
-            else
-                _daemonState.value = DaemonState.Stopped
-        }.onFailure { e -> _daemonState.value = DaemonState.Error(e) }
+        return when (val exitCode = Shell.su("[ -f /proc/\$(cat \"$pidFilePath\")/status ]").exec().code) {
+            0 -> _daemonState.value = DaemonState.Running
+            1 -> _daemonState.value = DaemonState.Stopped
+            else -> _daemonState.value = DaemonState.Error(exitCode)
+        }
     }
 
     fun start(persistentOptions: PersistentOptions, profiles: List<Profile>) {
@@ -44,21 +39,11 @@ class CliDaemon(private val execPath: String,
         if (!isDefaultExists) {
             argsStr.append(" --profile default") // Dummy "default" profile
         }
-        kotlin.runCatching {
-            ProcessBuilder(listOf("su", "-c", argsStr.toString()))
-                .redirectErrorStream(true)
-                .start()
-        }.onFailure { e -> _daemonState.value = DaemonState.Error(e) }
+        Shell.su(argsStr.toString()).exec()
     }
 
     fun stop() {
-        kotlin.runCatching {
-            val p = ProcessBuilder(listOf("su",
-                "-c",
-                "kill -INT \$(cat \"$pidFilePath\")"))
-                .start()
-            p.waitFor()
-        }.onFailure { e -> _daemonState.value = DaemonState.Error(e) }
+        Shell.su("kill -INT \$(cat \"$pidFilePath\")").exec()
     }
 
     data class PersistentOptions(
