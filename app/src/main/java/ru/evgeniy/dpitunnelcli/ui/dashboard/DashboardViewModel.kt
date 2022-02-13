@@ -35,18 +35,16 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
                     }
                     is DaemonState.Running -> {
                         _uiState.postValue(UIState.Running)
-                        if (lastDaemonState !is DaemonState.Running)
+                        if (lastDaemonState is DaemonState.Stopped || lastDaemonState is DaemonState.Error)
                             proxyUseCase.set("127.0.0.1", settingsUseCase.getPort() ?: Constants.DPITUNNEL_DEFAULT_PORT)
                     }
                     is DaemonState.Stopped -> {
                         _uiState.postValue(UIState.Stopped)
-                        if (lastDaemonState !is DaemonState.Stopped && lastDaemonState !is DaemonState.Error)
+                        if (lastDaemonState is DaemonState.Running)
                             proxyUseCase.unset()
                     }
                     is DaemonState.Error -> {
                         _uiState.postValue(UIState.Stopped)
-                        if (lastDaemonState !is DaemonState.Stopped && lastDaemonState !is DaemonState.Error)
-                            proxyUseCase.unset()
                     }
                 }
                 lastDaemonState = state
