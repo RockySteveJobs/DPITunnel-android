@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import ru.evgeniy.dpitunnelcli.cli.CliDaemon
-import ru.evgeniy.dpitunnelcli.domain.entities.Profile
 import ru.evgeniy.dpitunnelcli.domain.usecases.*
 import ru.evgeniy.dpitunnelcli.utils.Constants
 
@@ -24,7 +23,6 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
     val uiState: LiveData<UIState> get() = _uiState
 
     private var lastDaemonState: DaemonState? = null
-    private var _profiles: List<Profile>? = null
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,9 +49,6 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
-            _profiles = fetchAllProfilesUseCase.fetch()
-        }
-        viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 daemonUseCase.check()
                 delay(2000)
@@ -62,45 +57,41 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
     }
 
     fun startStop() {
-        _profiles?.let { _profiles ->
-            viewModelScope.launch(Dispatchers.IO) {
-                when(daemonUseCase.daemonState.value) {
-                    is DaemonState.Running -> daemonUseCase.stop()
-                    is DaemonState.Stopped -> daemonUseCase.start(
-                        CliDaemon.PersistentOptions(
-                            caBundlePath = settingsUseCase.getCABundlePath()!!,
-                            ip = settingsUseCase.getIP(),
-                            port = settingsUseCase.getPort()
-                        ),
-                        _profiles
-                    )
-                    is DaemonState.Error -> {}
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            when(daemonUseCase.daemonState.value) {
+                is DaemonState.Running -> daemonUseCase.stop()
+                is DaemonState.Stopped -> daemonUseCase.start(
+                    CliDaemon.PersistentOptions(
+                        caBundlePath = settingsUseCase.getCABundlePath()!!,
+                        ip = settingsUseCase.getIP(),
+                        port = settingsUseCase.getPort()
+                    ),
+                    fetchAllProfilesUseCase.fetch()
+                )
+                is DaemonState.Error -> {}
             }
         }
     }
 
     fun restart() {
-        _profiles?.let { _profiles ->
-            viewModelScope.launch(Dispatchers.IO) {
-                daemonUseCase.stop()
-                var isStopped = false
-                withTimeoutOrNull(2000) {
-                    daemonUseCase.daemonState.collect { state ->
-                        if (state is DaemonState.Stopped)
-                            isStopped = true
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            daemonUseCase.stop()
+            var isStopped = false
+            withTimeoutOrNull(2000) {
+                daemonUseCase.daemonState.collect { state ->
+                    if (state is DaemonState.Stopped)
+                        isStopped = true
                 }
-                if (isStopped)
-                    daemonUseCase.start(
-                        CliDaemon.PersistentOptions(
-                            caBundlePath = settingsUseCase.getCABundlePath()!!,
-                            ip = settingsUseCase.getIP(),
-                            port = settingsUseCase.getPort()
-                        ),
-                        _profiles
-                    )
             }
+            if (isStopped)
+                daemonUseCase.start(
+                    CliDaemon.PersistentOptions(
+                        caBundlePath = settingsUseCase.getCABundlePath()!!,
+                        ip = settingsUseCase.getIP(),
+                        port = settingsUseCase.getPort()
+                    ),
+                    fetchAllProfilesUseCase.fetch()
+                )
         }
     }
 
