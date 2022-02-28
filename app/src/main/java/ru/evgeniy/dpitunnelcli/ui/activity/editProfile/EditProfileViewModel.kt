@@ -26,12 +26,18 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         enterSite = getStringResourceUseCase.getString(R.string.autoconfig_enter_site),
         configureSuccessful = getStringResourceUseCase.getString(R.string.autoconfig_configuration_successful)
     )) { input -> autoConfigUseCase.input(input) }
+
+    private var _profileCurrentUnmodified: Profile? = null
+    val isModified: Boolean
+        get() = _profileCurrent != _profileCurrentUnmodified
     private var _profileCurrent: Profile? = null
         @Synchronized
         get() = field
         @Synchronized
         set(value) {
             field = value
+            if (_profileCurrentUnmodified == null)
+                _profileCurrentUnmodified = value?.copy()
             value?.let { _profile.postValue(it) }
         }
 
@@ -222,6 +228,14 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
             else
                 loadProfile(fetchProfileUseCase.fetch(id))
         }
+    }
+
+    fun saveUnsaved() {
+        save()
+    }
+
+    fun discardUnsaved() {
+        _uiState.postValue(UIState.Finish)
     }
 
     private fun loadProfile(profile: Profile?) {

@@ -14,9 +14,9 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import ru.evgeniy.dpitunnelcli.R
 import ru.evgeniy.dpitunnelcli.data.usecases.*
@@ -53,6 +53,23 @@ class EditProfileActivity : AppCompatActivity() {
             fetchProfileUseCase = FetchProfileUseCase(applicationContext),
             getStringResourceUseCase = GetStringResourceUseCase(applicationContext)
         )
+    }
+
+    override fun onBackPressed() {
+        if (editProfilesViewModel.isModified) {
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle(R.string.title_confirmation_edit_profile_dialog)
+            alertDialog.setMessage(R.string.message_confirmation_edit_profile_dialog)
+            alertDialog.setPositiveButton(R.string.save_confirmation_edit_profile_dialog) { _, _ ->
+                editProfilesViewModel.saveUnsaved()
+            }
+            alertDialog.setNegativeButton(R.string.discard_confirmation_edit_profile_dialog) { _, _ ->
+                editProfilesViewModel.discardUnsaved()
+            }
+            alertDialog.setNeutralButton(R.string.cancel_confirmation_edit_profile_dialog, null)
+            alertDialog.create().show()
+        } else
+            super.onBackPressed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
