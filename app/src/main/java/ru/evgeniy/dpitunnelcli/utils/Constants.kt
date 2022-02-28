@@ -11,6 +11,8 @@ object Constants {
     const val DPITUNNEL_DEFAULT_PORT = 8080
     const val DPITUNNEL_BINARY_NAME = "libdpitunnel-cli.so"
     const val DPITUNNEL_DAEMON_PID_FILE = "/dev/dpitunnel-cli-daemon.pid"
+    const val INBUILT_CA_BUNDLE_FILE_NAME = "ca.bundle"
+    const val USER_CA_BUNDLE_FILE_NAME = "ca.bundle_user"
     val DEFAULT_PROFILE = Profile(
         id = null,
         name = "",

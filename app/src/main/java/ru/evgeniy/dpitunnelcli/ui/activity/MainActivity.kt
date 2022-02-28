@@ -13,6 +13,7 @@ import com.topjohnwu.superuser.Shell
 import ru.evgeniy.dpitunnelcli.R
 import ru.evgeniy.dpitunnelcli.databinding.ActivityMainBinding
 import ru.evgeniy.dpitunnelcli.preferences.AppPreferences
+import ru.evgeniy.dpitunnelcli.utils.Constants
 import java.io.*
 
 
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         val appPreferences = AppPreferences.getInstance(this)
         if (appPreferences.firstRun) {
             extractAssets()
-            appPreferences.caBundlePath = filesDir.absolutePath + "/ca.bundle"
+            appPreferences.caBundlePath = filesDir.absolutePath + "/${Constants.INBUILT_CA_BUNDLE_FILE_NAME}"
         }
 
         binding = ActivityMainBinding.inflate(layoutInflater)

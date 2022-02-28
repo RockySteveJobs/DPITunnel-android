@@ -98,8 +98,9 @@
     <string name="preference_category_general">General</string>
     <string name="preference_start_on_boot_title">Start service on boot</string>
     <string name="preference_start_on_boot_summary">Start DPITunnel after device boot</string>
-    <string name="preference_ca_bundle_path_title">CA Bundle</string>
-    <string name="preference_ca_bundle_path_summary">Custom CA Bundle for validating SSL certs</string>
+    <string name="preference_custom_ca_bundle_title">Use custom CA Bundle</string>
+    <string name="preference_custom_ca_bundle_summary">Custom CA Bundle for validating SSL certs</string>
+    <string name="preference_ca_bundle_path_title">Import CA Bundle</string>
     <!-- Proxy -->
     <string name="preference_category_server">Proxy</string>
     <string name="preference_proxy_ip_title">Proxy IP</string>
