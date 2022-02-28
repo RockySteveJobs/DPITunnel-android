@@ -7,12 +7,15 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.checkbox.MaterialCheckBox
 import ru.evgeniy.dpitunnelcli.R
+import ru.evgeniy.dpitunnelcli.data.usecases.FetchProfileUseCase
 import ru.evgeniy.dpitunnelcli.domain.entities.Profile
 
 class ProfilesAdapter(val profileListener: (Profile) -> Unit,
                       val profileRenameListener: (Profile) -> Unit,
-                      val profileDeleteListener: (Profile) -> Unit): RecyclerView.Adapter<ProfileViewHolder>() {
+                      val profileDeleteListener: (Profile) -> Unit,
+                      val profileDefaultListener: (Profile) -> Unit): RecyclerView.Adapter<ProfileViewHolder>() {
     private var profiles = listOf<Profile>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
@@ -39,6 +42,10 @@ class ProfilesAdapter(val profileListener: (Profile) -> Unit,
                         profileDeleteListener(profiles[position])
                         true
                     }
+                    R.id.profile_item_menu_default -> {
+                        profileDefaultListener(profiles[position])
+                        true
+                    }
                     else -> false
                 }
             }
@@ -61,6 +68,9 @@ class ProfileViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     val options: ImageButton = itemView.findViewById(R.id.view_holder_profile_options)
 
     fun onBind(profile: Profile) {
-        title.text = profile.title ?: itemView.context.getString(R.string.unnamed_profile_name)
+        val titleStr = StringBuilder(profile.title ?: itemView.context.getString(R.string.unnamed_profile_name))
+        if (profile.default)
+            titleStr.append(" ").append(itemView.context.getString(R.string.default_profile_mark))
+        title.text = titleStr.toString()
     }
 }

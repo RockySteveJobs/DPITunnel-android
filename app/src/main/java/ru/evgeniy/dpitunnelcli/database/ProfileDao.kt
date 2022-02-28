@@ -8,7 +8,7 @@ interface ProfileDao {
     suspend fun getAll(): List<Profile>
 
     @Query("SELECT * FROM profiles_table WHERE id = :id")
-    suspend fun findByName(id: String): Profile?
+    suspend fun findById(id: Int): Profile?
 
     @Insert
     suspend fun insertProfile(profile: Profile)
@@ -17,13 +17,13 @@ interface ProfileDao {
     suspend fun update(profile: Profile)
 
     @Query("UPDATE profiles_table SET title = :newTitle WHERE id = :id")
-    suspend fun rename(id: String, newTitle: String)
+    suspend fun rename(id: Int, newTitle: String)
 
     @Query("DELETE FROM profiles_table WHERE id = :id")
-    suspend fun delete(id: String)
+    suspend fun delete(id: Int)
 
     suspend fun insertOrUpdate(profile: Profile) {
-        val profileFromDB = findByName(profile.id)
+        val profileFromDB = profile.id?.let { findById(it) }
         if (profileFromDB == null)
             insertProfile(profile)
         else

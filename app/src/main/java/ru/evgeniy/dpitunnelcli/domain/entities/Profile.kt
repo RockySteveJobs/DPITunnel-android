@@ -14,7 +14,8 @@ enum class DesyncFirstAttack {
 }
 
 data class Profile(
-    var id: String,
+    var id: Int?,
+    var name: String,
     var title: String?,
     var bufferSize: Int?,
     var splitPosition: Int?,
@@ -29,11 +30,15 @@ data class Profile(
     var dohServer: String?,
     var desyncAttacks: Boolean,
     var desyncZeroAttack: DesyncZeroAttack?,
-    var desyncFirstAttack: DesyncFirstAttack?
+    var desyncFirstAttack: DesyncFirstAttack?,
+    var default: Boolean = false
 ) {
     override fun toString(): String {
         val stringBuilder = StringBuilder()
-        stringBuilder.append("--profile \"$id\"")
+        if (default)
+            stringBuilder.append("--profile default")
+        else
+            stringBuilder.append("--profile \"$name\"")
         bufferSize?.let { stringBuilder.append(" --buffer-size \"$it\"") }
         splitPosition?.let { stringBuilder.append(" --split-position \"$it\"") }
         fakePacketsTtl?.let { stringBuilder.append(" --ttl \"$it\"") }

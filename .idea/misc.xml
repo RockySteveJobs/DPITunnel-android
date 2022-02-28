@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_add_black_24dp.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/ic_check_circle_black_24dp.xml" value="0.234" />
+        <entry key="app/src/main/res/drawable/ic_check_circle_white_96dp.xml" value="0.227" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/ic_more_vert_black_24dp.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/ic_save_black_24dp.xml" value="0.19" />
@@ -15,7 +16,7 @@
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.3482789855072464" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_profiles.xml" value="0.3482789855072464" />
-        <entry key="app/src/main/res/layout/view_holder_profile_item.xml" value="0.1625" />
+        <entry key="app/src/main/res/layout/view_holder_profile_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/view_holder_profile_item_menu.xml" value="0.3482789855072464" />
         <entry key="app/src/main/res/menu/profile_item_menu.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.28703703703703703" />

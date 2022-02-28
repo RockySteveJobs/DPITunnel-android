@@ -6,14 +6,17 @@ import ru.evgeniy.dpitunnelcli.domain.entities.DesyncFirstAttack
 import ru.evgeniy.dpitunnelcli.domain.entities.DesyncZeroAttack
 import ru.evgeniy.dpitunnelcli.domain.entities.Profile
 import ru.evgeniy.dpitunnelcli.domain.usecases.IFetchProfileUseCase
+import ru.evgeniy.dpitunnelcli.preferences.AppPreferences
 
 class FetchProfileUseCase(private val context: Context): IFetchProfileUseCase {
 
     private val profileDao = AppDatabase.getInstance(context).profileDao()
+    private val appPreferences = AppPreferences.getInstance(context)
 
-    override suspend fun fetch(name: String): Profile? = profileDao.findByName(name)?.let { profile ->
+    override suspend fun fetch(id: Int): Profile? = profileDao.findById(id)?.let { profile ->
         Profile(
             id = profile.id,
+            name = profile.name,
             title = profile.title,
             bufferSize = profile.bufferSize,
             splitPosition = profile.splitPosition,
@@ -28,6 +31,7 @@ class FetchProfileUseCase(private val context: Context): IFetchProfileUseCase {
             dohServer = profile.dohServer,
             desyncAttacks = profile.desyncAttacks,
             desyncZeroAttack = profile.desyncZeroAttack?.ordinal?.let { DesyncZeroAttack.values()[it] },
-            desyncFirstAttack = profile.desyncFirstAttack?.ordinal?.let { DesyncFirstAttack.values()[it] }
+            desyncFirstAttack = profile.desyncFirstAttack?.ordinal?.let { DesyncFirstAttack.values()[it] },
+            default = profile.id == appPreferences.defaultProfileId
     ) }
 }

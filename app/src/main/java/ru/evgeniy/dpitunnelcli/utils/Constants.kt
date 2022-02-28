@@ -12,7 +12,8 @@ object Constants {
     const val DPITUNNEL_BINARY_NAME = "libdpitunnel-cli.so"
     const val DPITUNNEL_DAEMON_PID_FILE = "/dev/dpitunnel-cli-daemon.pid"
     val DEFAULT_PROFILE = Profile(
-        id = "",
+        id = null,
+        name = "",
         title = null,
         bufferSize = null,
         splitPosition = 3,

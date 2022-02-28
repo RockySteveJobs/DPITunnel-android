@@ -17,6 +17,7 @@ import ru.evgeniy.dpitunnelcli.data.usecases.DeleteProfileUseCase
 import ru.evgeniy.dpitunnelcli.ui.activity.editProfile.EditProfileActivity
 import ru.evgeniy.dpitunnelcli.data.usecases.FetchAllProfilesUseCase
 import ru.evgeniy.dpitunnelcli.data.usecases.RenameProfileUseCase
+import ru.evgeniy.dpitunnelcli.data.usecases.SettingsUseCase
 import ru.evgeniy.dpitunnelcli.databinding.FragmentProfilesBinding
 
 class ProfilesFragment : Fragment() {
@@ -31,7 +32,8 @@ class ProfilesFragment : Fragment() {
         ProfilesViewModelFactory(
             fetchAllProfilesUseCase = FetchAllProfilesUseCase(requireContext().applicationContext),
             deleteProfileUseCase = DeleteProfileUseCase(requireContext().applicationContext),
-            renameProfileUseCase = RenameProfileUseCase(requireContext().applicationContext)
+            renameProfileUseCase = RenameProfileUseCase(requireContext().applicationContext),
+            settingsUseCase = SettingsUseCase(requireContext().applicationContext)
         )
     }
 
@@ -61,14 +63,17 @@ class ProfilesFragment : Fragment() {
                     .setTitle(getString(R.string.dialog_profile_rename_title))
                     .setView(inputEditTextField)
                     .setPositiveButton(getString(R.string.dialog_profile_rename_positive)) { _, _ ->
-                        profilesViewModel.rename(it.id, inputEditTextField.text.toString())
+                        profilesViewModel.rename(it.id!!, inputEditTextField.text.toString())
                     }
                     .setNegativeButton(getString(R.string.dialog_profile_rename_negative), null)
                     .create()
                 dialog.show()
             },
             profileDeleteListener = {
-                profilesViewModel.delete(it.id)
+                profilesViewModel.delete(it.id!!)
+            },
+            profileDefaultListener = {
+                profilesViewModel.setDefaultProfile(it.id!!)
             }
         )
 
@@ -83,7 +88,7 @@ class ProfilesFragment : Fragment() {
 
         binding.profilesAddProfileButton.setOnClickListener {
             resultLauncher.launch(Intent(context, EditProfileActivity::class.java)
-                .putExtra(EditProfileActivity.PROFILE_ID_KEY, null as String?))
+                .putExtra(EditProfileActivity.PROFILE_ID_KEY, 0))
         }
     }
 

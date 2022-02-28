@@ -45,14 +45,14 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         get() = ""
         set(value) {
             _profileCurrent?.let {
-                it.id = value
+                it.name = value
             }
         }
     var zeroAttack: Int
         get() = 0
         set(value) {
             _profileCurrent?.let {
-                it.desyncAttacks = true
+                it.desyncAttacks = !(value == 0 && it.desyncFirstAttack == null)
                 it.desyncZeroAttack = if (value == 0) null else DesyncZeroAttack.values()[value.minus(1)]
             }
         }
@@ -60,7 +60,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         get() = 0
         set(value) {
             _profileCurrent?.let {
-                it.desyncAttacks = true
+                it.desyncAttacks = !(value == 0 && it.desyncZeroAttack == null)
                 it.desyncFirstAttack = if (value == 0) null else DesyncFirstAttack.values()[value.minus(1)]
             }
         }
@@ -159,7 +159,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     fun save() {
         _profileCurrent?.let {
             viewModelScope.launch(Dispatchers.IO) {
-                if (it.id.isBlank()) {
+                if (it.name.isBlank()) {
                     _uiState.postValue(UIState.Error(ErrorType.ERROR_TYPE_INVALID_PROFILE_ID))
                     return@launch
                 }
@@ -173,7 +173,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         viewModelScope.launch(Dispatchers.IO) {
             _profileCurrent?.let {
                 val profile = it
-                profile.id = fetchDefaultIfaceWifiAPUseCase.fetch(context).let {
+                profile.name = fetchDefaultIfaceWifiAPUseCase.fetch(context).let {
                     it.first?.plus(it.second?.let {
                         ":$it"
                     } ?: "") ?: ""
@@ -212,14 +212,15 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     }
 
     fun autoConfigSendInput(input: String) {
-        _outputFiler.input(input)
+        _outputFiler.input("$input\n")
     }
 
-    fun loadProfile(profileId: String?) {
+    fun loadProfile(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            loadProfile(profileId?.let {
-                fetchProfileUseCase.fetch(it)
-            })
+            if (id == 0)
+                loadProfile(null as Profile?)
+            else
+                loadProfile(fetchProfileUseCase.fetch(id))
         }
     }
 

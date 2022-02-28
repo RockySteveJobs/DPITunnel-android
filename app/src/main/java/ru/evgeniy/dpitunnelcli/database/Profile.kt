@@ -19,7 +19,8 @@ enum class DesyncFirstAttack {
 
 @Entity(tableName = "profiles_table")
 data class Profile(
-    @PrimaryKey @ColumnInfo(name = "id") val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "title") val title: String?,
     @ColumnInfo(name = "buffer_size") val bufferSize: Int?,
     @ColumnInfo(name = "split_position") val splitPosition: Int?,

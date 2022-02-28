@@ -31,6 +31,8 @@
 
     <!-- Profiles fragment -->
     <string name="unnamed_profile_name">Unnamed</string>
+    <string name="default_profile_mark"> (Default)</string>
+    <string name="profile_item_menu_default">Default</string>
     <string name="profile_item_menu_rename">Rename</string>
     <string name="profile_item_menu_delete">Delete</string>
     <string name="dialog_profile_rename_positive">OK</string>

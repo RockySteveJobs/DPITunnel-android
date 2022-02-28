@@ -8,6 +8,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -216,7 +217,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         editProfilesViewModel.profile.observe(this) { profile ->
             supportActionBar?.title = profile?.title ?: getString(R.string.unnamed_profile_name)
-            edittextProfileId.setText(profile.id)
+            edittextProfileId.setText(profile.name)
             spinnerZeroLevel.setSelection(profile.desyncZeroAttack?.ordinal?.plus(1) ?: 0)
             spinnerFirstLevel.setSelection(profile.desyncFirstAttack?.ordinal?.plus(1) ?: 0)
             edittextTtl.setText(profile.fakePacketsTtl?.toString() ?: "")
@@ -229,7 +230,7 @@ class EditProfileActivity : AppCompatActivity() {
             edittextDns.setText(profile.inBuiltDNSIP?.plus(profile.inBuiltDNSPort?.let { ":$it" } ?: "") ?: "")
         }
 
-        editProfilesViewModel.loadProfile(intent.getStringExtra(PROFILE_ID_KEY))
+        editProfilesViewModel.loadProfile(intent.getIntExtra(PROFILE_ID_KEY, 0))
     }
 
     private fun returnResult() {

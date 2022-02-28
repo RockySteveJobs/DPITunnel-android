@@ -5,4 +5,6 @@ interface ISettingsUseCase {
     fun getCABundlePath(): String?
     fun getIP(): String?
     fun getPort(): Int?
+    fun getDefaultProfileId(): Int?
+    fun setDefaultProfileId(value: Int?)
 }

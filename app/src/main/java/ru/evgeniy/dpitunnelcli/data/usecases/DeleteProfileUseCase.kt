@@ -8,7 +8,7 @@ class DeleteProfileUseCase(private val context: Context): IDeleteProfileUseCase 
 
     private val profileDao = AppDatabase.getInstance(context).profileDao()
 
-    override suspend fun delete(name: String) {
-        profileDao.delete(name)
+    override suspend fun delete(id: Int) {
+        profileDao.delete(id)
     }
 }

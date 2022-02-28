@@ -25,19 +25,9 @@ class CliDaemon(private val execPath: String,
         argsStr.append("$execPath --pid \"$pidFilePath\"")
         argsStr.append(' ')
         argsStr.append(persistentOptions.toString())
-        /* This variable checks for "default" profile
-        * if there is no default profile, then DPITunnel-cli binary will crash
-        * when user will connect to network that we don't have profile for
-        * so just add dummy default profile, that won't apply any censor bypass techniques */
-        var isDefaultExists = false
         profiles.forEach {
-            if(it.id == "default")
-                isDefaultExists = true
             argsStr.append(' ')
             argsStr.append(it.toString())
-        }
-        if (!isDefaultExists) {
-            argsStr.append(" --profile default") // Dummy "default" profile
         }
         Shell.su(argsStr.toString()).exec()
     }

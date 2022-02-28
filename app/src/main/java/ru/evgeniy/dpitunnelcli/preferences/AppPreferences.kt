@@ -37,6 +37,15 @@ class AppPreferences private  constructor() {
             return first
         }
 
+    var defaultProfileId: Int?
+        set(value) {
+            with(sharedPreferences.edit()){
+                putInt(DEFAULT_PROFILE_ID_PROPERTY_NAME, value ?: 0)
+                apply()
+            }
+        }
+        get() = sharedPreferences.getInt(DEFAULT_PROFILE_ID_PROPERTY_NAME, 0).let { if (it == 0) null else it }
+
     companion object {
         const val SETTINGS_STORAGE_NAME = "PERSISTENT_SETTINGS"
         private const val START_ON_BOOT_PROPERTY_NAME = "preference_start_on_boot"
@@ -44,6 +53,7 @@ class AppPreferences private  constructor() {
         private const val IP_PROPERTY_NAME = "preference_proxy_ip"
         private const val PORT_PROPERTY_NAME = "preference_proxy_port"
         private const val FIRST_RUN_PROPERTY_NAME = "first_run"
+        private const val DEFAULT_PROFILE_ID_PROPERTY_NAME = "default_profile_id"
 
         fun setDefaults(context: Context) {
             PreferenceManager.setDefaultValues(context, SETTINGS_STORAGE_NAME, Context.MODE_PRIVATE, R.xml.root_preferences, false);

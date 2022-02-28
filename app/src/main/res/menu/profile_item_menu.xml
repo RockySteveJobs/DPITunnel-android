@@ -8,4 +8,8 @@
         android:id="@+id/profile_item_menu_delete"
         android:title="@string/profile_item_menu_delete"
         android:icon="@drawable/ic_delete_black_24dp" />
+    <item
+        android:id="@+id/profile_item_menu_default"
+        android:title="@string/profile_item_menu_default"
+        android:icon="@drawable/ic_bookmark_added_black_24dp" />
 </menu>

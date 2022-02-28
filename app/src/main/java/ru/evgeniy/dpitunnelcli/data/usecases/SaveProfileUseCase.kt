@@ -12,6 +12,7 @@ class SaveProfileUseCase(private val context: Context): ISaveProfileUseCase {
     override suspend fun save(profile: Profile) {
         profileDao.insertOrUpdate(profile = ru.evgeniy.dpitunnelcli.database.Profile(
             id = profile.id,
+            name = profile.name,
             title = profile.title,
             bufferSize = profile.bufferSize,
             splitPosition = profile.splitPosition,
