@@ -172,14 +172,17 @@ class EditProfileActivity : AppCompatActivity() {
         val terminalOutput = binding.editProfileDesyncAttacksAutoconfigTerminalOutput
 
         val terminalInput = binding.editProfileDesyncAttacksAutoconfigTerminalInput
-        terminalInput.addTextChangedListener {
-            it?.let {
-                val s = it.toString()
-                if (s.isNotEmpty() && s[s.length - 1] == '\n') {
+        terminalInput.imeOptions = EditorInfo.IME_ACTION_DONE
+        terminalInput.setOnEditorActionListener { v, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                val s = v.text.toString()
+                if (s.isNotEmpty()) {
                     editProfilesViewModel.autoConfigSendInput(s)
                     terminalInput.setText("")
                 }
-            }
+                true
+            } else
+                false
         }
 
         editProfilesViewModel.autoConfigOutput.observe(this) {

@@ -306,6 +306,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:visibility="gone"
+                        android:maxLines="1"
+                        android:inputType="textFilter|textNoSuggestions"
                         app:layout_constraintStart_toStartOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
                         app:layout_constraintEnd_toEndOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
                         app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll" />
