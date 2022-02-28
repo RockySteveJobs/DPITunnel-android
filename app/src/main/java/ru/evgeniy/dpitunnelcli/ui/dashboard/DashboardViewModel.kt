@@ -74,6 +74,7 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
                         )
                 }
                 is DaemonState.Error -> {}
+                is DaemonState.Loading -> {}
             }
         }
     }
