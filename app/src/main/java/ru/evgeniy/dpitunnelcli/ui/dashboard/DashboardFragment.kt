@@ -87,7 +87,7 @@ class DashboardFragment : Fragment() {
                     imageViewStatus.setImageDrawable(AppCompatResources.getDrawable(requireContext().applicationContext, R.drawable.ic_check_circle_white_96dp))
                     imageViewStatus.setBackgroundColor(ContextCompat.getColor(requireContext().applicationContext, R.color.green_300))
                     buttonStartStop.text = getText(R.string.button_status_stop_text)
-                    buttonStartStop.setIconResource(R.drawable.ic_stop_black_24)
+                    buttonStartStop.setIconResource(R.drawable.ic_stop_24)
                     buttonStartStop.isClickable = true
                     buttonRestart.isClickable = true
                 }
@@ -97,7 +97,7 @@ class DashboardFragment : Fragment() {
                     imageViewStatus.setImageDrawable(AppCompatResources.getDrawable(requireContext().applicationContext, R.drawable.ic_cancel_white_96dp))
                     imageViewStatus.setBackgroundColor(ContextCompat.getColor(requireContext().applicationContext, R.color.red_300))
                     buttonStartStop.text = getText(R.string.button_status_start_text)
-                    buttonStartStop.setIconResource(R.drawable.ic_play_black_24dp)
+                    buttonStartStop.setIconResource(R.drawable.ic_play_24dp)
                     buttonStartStop.isClickable = true
                     buttonRestart.isClickable = true
                 }

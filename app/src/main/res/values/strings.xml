@@ -40,6 +40,8 @@
     <string name="dialog_profile_rename_title">Rename profile</string>
 
     <!-- Edit profile activity -->
+    <!-- Toolbar -->
+    <string name="rename_edit_profile_toolbar">Rename</string>
     <!-- Profile id card -->
     <string name="title_profile_id_card">Profile ID</string>
     <string name="desc_profile_id_card">Net iface/Wi-Fi AP</string>

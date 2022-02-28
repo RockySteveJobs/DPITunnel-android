@@ -7,10 +7,12 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -57,17 +59,18 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (editProfilesViewModel.isModified) {
-            val alertDialog = AlertDialog.Builder(this)
-            alertDialog.setTitle(R.string.title_confirmation_edit_profile_dialog)
-            alertDialog.setMessage(R.string.message_confirmation_edit_profile_dialog)
-            alertDialog.setPositiveButton(R.string.save_confirmation_edit_profile_dialog) { _, _ ->
-                editProfilesViewModel.saveUnsaved()
-            }
-            alertDialog.setNegativeButton(R.string.discard_confirmation_edit_profile_dialog) { _, _ ->
-                editProfilesViewModel.discardUnsaved()
-            }
-            alertDialog.setNeutralButton(R.string.cancel_confirmation_edit_profile_dialog, null)
-            alertDialog.create().show()
+            val dialog = AlertDialog.Builder(this)
+                .setTitle(R.string.title_confirmation_edit_profile_dialog)
+                .setMessage(R.string.message_confirmation_edit_profile_dialog)
+                .setPositiveButton(R.string.save_confirmation_edit_profile_dialog) { _, _ ->
+                    editProfilesViewModel.saveUnsaved()
+                }
+                .setNegativeButton(R.string.discard_confirmation_edit_profile_dialog) { _, _ ->
+                    editProfilesViewModel.discardUnsaved()
+                }
+                .setNeutralButton(R.string.cancel_confirmation_edit_profile_dialog, null)
+                .create()
+            dialog.show()
         } else
             super.onBackPressed()
     }
@@ -79,6 +82,25 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.editProfileToolbar)
+        binding.editProfileToolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.edit_profile_toolbar_menu_rename -> {
+                    val inputEditTextField = EditText(this)
+                    inputEditTextField.setText(editProfilesViewModel.title)
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.dialog_profile_rename_title))
+                        .setView(inputEditTextField)
+                        .setPositiveButton(getString(R.string.dialog_profile_rename_positive)) { _, _ ->
+                            editProfilesViewModel.title = inputEditTextField.text.toString()
+                        }
+                        .setNegativeButton(getString(R.string.dialog_profile_rename_negative), null)
+                        .create()
+                    dialog.show()
+                    true
+                }
+                else -> false
+            }
+        }
 
         editProfilesViewModel.uiState.observe(this) { state ->
             when(state) {
@@ -248,6 +270,11 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         editProfilesViewModel.loadProfile(intent.getIntExtra(PROFILE_ID_KEY, 0))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.edit_profile_toolbar_menu, menu)
+        return true
     }
 
     private fun returnResult() {

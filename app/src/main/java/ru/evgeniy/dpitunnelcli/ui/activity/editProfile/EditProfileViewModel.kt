@@ -47,6 +47,15 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     private val _uiState = MutableLiveData<UIState>()
     val uiState: LiveData<UIState> get() = _uiState
 
+    var title: String
+        get() = _profileCurrent?.title ?: ""
+        set(value) {
+            _profileCurrent?.let {
+                it.title = value
+                _profileCurrent = _profileCurrent
+            }
+        }
+
     var profileId: String
         get() = ""
         set(value) {

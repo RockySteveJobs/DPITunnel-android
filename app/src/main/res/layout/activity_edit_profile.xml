@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_save_black_24"
+        android:src="@drawable/ic_save_24"
         android:layout_margin="@dimen/fab_margin" />
 
     <androidx.core.widget.NestedScrollView

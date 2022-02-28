@@ -32,7 +32,7 @@
                 android:id="@+id/dashboard_status_card_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_settings_black_24dp"
+                app:icon="@drawable/ic_settings_24dp"
                 android:text="@string/button_settings"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 app:layout_constraintTop_toTopOf="parent"
@@ -71,7 +71,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/dashboard_status_card_restart"
                 tools:text="@string/button_status_stop_text"
-                tools:icon="@drawable/ic_stop_black_24" />
+                tools:icon="@drawable/ic_stop_24" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/dashboard_status_card_restart"
@@ -80,7 +80,7 @@
                 android:theme="@style/Widget.AppCompat.Button"
                 android:layout_margin="@dimen/cardview_items_margin"
                 android:text="@string/button_restart"
-                app:icon="@drawable/ic_restart_black_24dp"
+                app:icon="@drawable/ic_restart_24dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 app:layout_constraintTop_toBottomOf="@id/dashboard_status_card_image"
                 app:layout_constraintStart_toEndOf="@id/dashboard_status_card_start_stop"
