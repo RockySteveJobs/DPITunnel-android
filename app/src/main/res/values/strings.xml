@@ -26,6 +26,8 @@
     <string name="button_status_start_text">start</string>
     <string name="button_status_stop_text">stop</string>
     <string name="button_restart">restart</string>
+    <!-- Dashboard fragment messages -->
+    <string name="no_one_profile_failed">Fail! Create at least one profile</string>
 
     <!-- Profiles fragment -->
     <string name="unnamed_profile_name">Unnamed</string>

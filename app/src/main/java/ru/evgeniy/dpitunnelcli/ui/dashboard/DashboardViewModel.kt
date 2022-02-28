@@ -60,14 +60,19 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
         viewModelScope.launch(Dispatchers.IO) {
             when(daemonUseCase.daemonState.value) {
                 is DaemonState.Running -> daemonUseCase.stop()
-                is DaemonState.Stopped -> daemonUseCase.start(
-                    CliDaemon.PersistentOptions(
-                        caBundlePath = settingsUseCase.getCABundlePath()!!,
-                        ip = settingsUseCase.getIP(),
-                        port = settingsUseCase.getPort()
-                    ),
-                    fetchAllProfilesUseCase.fetch()
-                )
+                is DaemonState.Stopped -> fetchAllProfilesUseCase.fetch().let {
+                    if (it.isEmpty())
+                        _uiState.postValue(UIState.Error(UIError.NO_ONE_PROFILE))
+                    else
+                        daemonUseCase.start(
+                            CliDaemon.PersistentOptions(
+                                caBundlePath = settingsUseCase.getCABundlePath()!!,
+                                ip = settingsUseCase.getIP(),
+                                port = settingsUseCase.getPort()
+                            ),
+                            it
+                        )
+                }
                 is DaemonState.Error -> {}
             }
         }
@@ -84,20 +89,30 @@ class DashboardViewModel(private val daemonUseCase: IDaemonUseCase,
                 }
             }
             if (isStopped)
-                daemonUseCase.start(
-                    CliDaemon.PersistentOptions(
-                        caBundlePath = settingsUseCase.getCABundlePath()!!,
-                        ip = settingsUseCase.getIP(),
-                        port = settingsUseCase.getPort()
-                    ),
-                    fetchAllProfilesUseCase.fetch()
-                )
+                fetchAllProfilesUseCase.fetch().let {
+                    if (it.isEmpty())
+                        _uiState.postValue(UIState.Error(UIError.NO_ONE_PROFILE))
+                    else
+                        daemonUseCase.start(
+                            CliDaemon.PersistentOptions(
+                                caBundlePath = settingsUseCase.getCABundlePath()!!,
+                                ip = settingsUseCase.getIP(),
+                                port = settingsUseCase.getPort()
+                            ),
+                            it
+                        )
+                }
         }
+    }
+
+    enum class UIError {
+        NO_ONE_PROFILE
     }
 
     sealed class UIState {
         object Running: UIState()
         object Stopped: UIState()
         object Loading: UIState()
+        data class Error(val code: UIError): UIState()
     }
 }

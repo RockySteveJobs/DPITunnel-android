@@ -100,6 +100,13 @@ class DashboardFragment : Fragment() {
                     buttonStartStop.isClickable = true
                     buttonRestart.isClickable = true
                 }
+                is DashboardViewModel.UIState.Error -> {
+                    when(state.code) {
+                        DashboardViewModel.UIError.NO_ONE_PROFILE -> {
+                            Toast.makeText(requireContext(), R.string.no_one_profile_failed, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
         }
     }
