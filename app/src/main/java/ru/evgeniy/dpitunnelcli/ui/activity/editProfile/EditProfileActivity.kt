@@ -7,9 +7,9 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.text.InputType
 import android.view.Menu
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -52,8 +52,7 @@ class EditProfileActivity : AppCompatActivity() {
             autoConfigUseCase = AutoConfigUseCase(),
             settingsUseCase = SettingsUseCase(applicationContext),
             saveProfileUseCase = SaveProfileUseCase(applicationContext),
-            fetchProfileUseCase = FetchProfileUseCase(applicationContext),
-            getStringResourceUseCase = GetStringResourceUseCase(applicationContext)
+            fetchProfileUseCase = FetchProfileUseCase(applicationContext)
         )
     }
 
@@ -87,6 +86,8 @@ class EditProfileActivity : AppCompatActivity() {
                 R.id.edit_profile_toolbar_menu_rename -> {
                     val inputEditTextField = EditText(this)
                     inputEditTextField.setText(editProfilesViewModel.title)
+                    inputEditTextField.maxLines = 1
+                    inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_FILTER or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                     val dialog = AlertDialog.Builder(this)
                         .setTitle(getString(R.string.dialog_profile_rename_title))
                         .setView(inputEditTextField)
@@ -107,7 +108,7 @@ class EditProfileActivity : AppCompatActivity() {
                 is EditProfileViewModel.UIState.Normal -> {}
                 is EditProfileViewModel.UIState.Error -> {
                     when(state.error) {
-                        EditProfileViewModel.ErrorType.ERROR_TYPE_INVALID_PROFILE_ID -> {
+                        EditProfileViewModel.UIErrorType.ERROR_INVALID_PROFILE_ID -> {
                             Toast.makeText(this, R.string.invalid_profile_id_failed, Toast.LENGTH_LONG).show()
                         }
                     }
@@ -203,40 +204,40 @@ class EditProfileActivity : AppCompatActivity() {
             editProfilesViewModel.splitAtSNI = isChecked
         }
 
-        val fullLog = binding.editProfileDesyncAttacksAutoconfigFullLog
-        fullLog.setOnCheckedChangeListener { _, isChecked ->
-            editProfilesViewModel.showFullLog(isChecked)
+        val showLog = binding.editProfileDesyncAttacksAutoconfigShowLog
+        showLog.setOnCheckedChangeListener { _, isChecked ->
+            editProfilesViewModel.showLog(isChecked)
         }
+
+        val progress = binding.editProfileDesyncAttacksAutoconfigProgress
 
         val terminalScroll = binding.editProfileDesyncAttacksAutoconfigTerminalScroll
         val terminalOutput = binding.editProfileDesyncAttacksAutoconfigTerminalOutput
 
-        val terminalInput = binding.editProfileDesyncAttacksAutoconfigTerminalInput
-        terminalInput.imeOptions = EditorInfo.IME_ACTION_DONE
-        terminalInput.setOnEditorActionListener { v, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                val s = v.text.toString()
-                if (s.isNotEmpty()) {
-                    editProfilesViewModel.autoConfigSendInput(s)
-                    terminalInput.setText("")
-                }
-                true
-            } else
-                false
-        }
-
         editProfilesViewModel.autoConfigOutput.observe(this) {
-            fullLog.visibility = View.VISIBLE
-            terminalOutput.visibility = View.VISIBLE
-            terminalInput.visibility = View.VISIBLE
             terminalOutput.text = it
             terminalScroll.scrollToBottom()
-            terminalInput.requestFocus()
+        }
+
+        editProfilesViewModel.showLog.observe(this) {
+            terminalOutput.visibility = if (it) View.VISIBLE else View.GONE
         }
 
         val buttonAutoConfig = binding.editProfileDesyncAttacksAutoconfigButton
         buttonAutoConfig.setOnClickListener {
-            editProfilesViewModel.runAutoConfig(applicationContext)
+            val inputEditTextField = EditText(this)
+            inputEditTextField.hint = getString(R.string.hint_autoconfigure_edit_profile_dialog)
+            inputEditTextField.maxLines = 1
+            inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_FILTER or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            val dialog = AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_autoconfigure_edit_profile_dialog))
+                .setView(inputEditTextField)
+                .setPositiveButton(getString(R.string.positive_autoconfigure_edit_profile_dialog)) { _, _ ->
+                    editProfilesViewModel.runAutoConfig(applicationContext, inputEditTextField.text.toString())
+                }
+                .setNegativeButton(getString(R.string.negative_autoconfigure_edit_profile_dialog), null)
+                .create()
+            dialog.show()
         }
 
         val switchDoh = binding.editProfileDnsUseDoh
@@ -252,6 +253,42 @@ class EditProfileActivity : AppCompatActivity() {
         val edittextDns = binding.editProfileDnsDnsServer
         edittextDns.doAfterTextChanged {
             editProfilesViewModel.dnsServer = it.toString()
+        }
+
+        editProfilesViewModel.autoConfigState.observe(this) { state ->
+            when(state) {
+                is EditProfileViewModel.AutoconfigState.Running -> {
+                    showLog.visibility = View.VISIBLE
+                    progress.visibility = View.VISIBLE
+                    progress.progress = state.progress
+                }
+                is EditProfileViewModel.AutoconfigState.Success -> {
+                    progress.visibility = View.GONE
+                    Toast.makeText(this, R.string.profile_successfully_configured, Toast.LENGTH_SHORT).show()
+                }
+                is EditProfileViewModel.AutoconfigState.Error -> {
+                    progress.visibility = View.GONE
+                    when(state.error) {
+                        EditProfileViewModel.AutoconfigErrorType.ERROR_NO_ATTACKS_FOUND -> {
+                            Toast.makeText(this, R.string.no_working_attacks_found, Toast.LENGTH_LONG).show()
+                        }
+                        EditProfileViewModel.AutoconfigErrorType.ERROR_RESOLVE_DOMAIN_FAILED -> {
+                            Toast.makeText(this, R.string.resolve_domain_failed, Toast.LENGTH_LONG).show()
+                        }
+                        EditProfileViewModel.AutoconfigErrorType.ERROR_CONFIG_PARSE_FAILED -> {
+                            Toast.makeText(this, R.string.config_parse_failed, Toast.LENGTH_LONG).show()
+                        }
+                        EditProfileViewModel.AutoconfigErrorType.ERROR_EXCEPTION -> {
+                            terminalOutput.text = state.errorString
+                            terminalScroll.scrollToBottom()
+                        }
+                    }
+                }
+                is EditProfileViewModel.AutoconfigState.Stopped -> {
+                    showLog.visibility = View.GONE
+                    progress.visibility = View.GONE
+                }
+            }
         }
 
         editProfilesViewModel.profile.observe(this) { profile ->

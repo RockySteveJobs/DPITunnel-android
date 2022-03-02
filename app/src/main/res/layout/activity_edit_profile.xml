@@ -269,14 +269,21 @@
                         app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_split_position" />
 
                     <com.google.android.material.checkbox.MaterialCheckBox
-                        android:id="@+id/edit_profile_desync_attacks_autoconfig_full_log"
+                        android:id="@+id/edit_profile_desync_attacks_autoconfig_show_log"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:text="@string/desc_full_log_autoconfig"
+                        android:text="@string/desc_show_log_autoconfig"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_split_at_sni" />
 
+                    <ProgressBar
+                        android:id="@+id/edit_profile_desync_attacks_autoconfig_progress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_show_log"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
                     <androidx.core.widget.NestedScrollView
                         android:id="@+id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
                         android:layout_width="0dp"
@@ -286,7 +293,7 @@
                         app:layout_constrainedHeight="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_full_log">
+                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_progress">
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
@@ -294,23 +301,12 @@
                                 android:id="@+id/edit_profile_desync_attacks_autoconfig_terminal_output"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="gone"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 tools:text="Here is terminal output"/>
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.core.widget.NestedScrollView>
-                    <EditText
-                        android:id="@+id/edit_profile_desync_attacks_autoconfig_terminal_input"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:maxLines="1"
-                        android:inputType="textFilter|textNoSuggestions"
-                        app:layout_constraintStart_toStartOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
-                        app:layout_constraintEnd_toEndOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
-                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll" />
 
                     <Button
                         android:id="@+id/edit_profile_desync_attacks_autoconfig_button"
@@ -318,7 +314,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/button_autoconfig_desync_attacks_card"
                         android:layout_marginTop="@dimen/cardview_items_margin"
-                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_terminal_input"
+                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_autoconfig_terminal_scroll"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>

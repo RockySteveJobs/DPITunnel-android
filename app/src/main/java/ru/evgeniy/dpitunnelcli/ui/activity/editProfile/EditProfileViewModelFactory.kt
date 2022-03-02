@@ -8,16 +8,14 @@ class EditProfileViewModelFactory(val getDefaultIfaceUseCase: IFetchDefaultIface
                                   val autoConfigUseCase: IAutoConfigUseCase,
                                   val settingsUseCase: ISettingsUseCase,
                                   val saveProfileUseCase: ISaveProfileUseCase,
-                                  val fetchProfileUseCase: IFetchProfileUseCase,
-                                  val getStringResourceUseCase: IGetStringResourceUseCase
+                                  val fetchProfileUseCase: IFetchProfileUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return modelClass.getConstructor(IFetchDefaultIfaceWifiAPUseCase::class.java,
             IAutoConfigUseCase::class.java,
             ISettingsUseCase::class.java,
             ISaveProfileUseCase::class.java,
-            IFetchProfileUseCase::class.java,
-            IGetStringResourceUseCase::class.java)
-            .newInstance(getDefaultIfaceUseCase, autoConfigUseCase, settingsUseCase, saveProfileUseCase, fetchProfileUseCase, getStringResourceUseCase)
+            IFetchProfileUseCase::class.java)
+            .newInstance(getDefaultIfaceUseCase, autoConfigUseCase, settingsUseCase, saveProfileUseCase, fetchProfileUseCase)
     }
 }

@@ -3,6 +3,7 @@ package ru.evgeniy.dpitunnelcli.ui.profiles
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,6 +60,8 @@ class ProfilesFragment : Fragment() {
             profileRenameListener = {
                 val inputEditTextField = EditText(requireActivity())
                 inputEditTextField.setText(it.title)
+                inputEditTextField.maxLines = 1
+                inputEditTextField.inputType = InputType.TYPE_TEXT_VARIATION_FILTER or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                 val dialog = AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.dialog_profile_rename_title))
                     .setView(inputEditTextField)

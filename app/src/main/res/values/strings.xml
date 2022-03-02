@@ -70,7 +70,7 @@
     <string name="desc_split_position_desync_attacks_card">Client packets split position</string>
     <string name="hint_split_position_desync_attacks_card">1 – 65535</string>
     <string name="desc_split_at_sni_desync_attacks_card">Split ClientHello at middle of SNI</string>
-    <string name="desc_full_log_autoconfig">Full log</string>
+    <string name="desc_show_log_autoconfig">Show log</string>
     <string name="button_autoconfig_desync_attacks_card">Set automatically</string>
     <!-- DNS card -->
     <string name="title_dns_card">DNS</string>
@@ -79,6 +79,11 @@
     <string name="hint_doh_server_dns_card">https://dns.google/dns-query</string>
     <string name="desc_dns_server_dns_card">DNS server</string>
     <string name="hint_dns_server_dns_card">8.8.8.8</string>
+    <!-- Autoconfigure dialog -->
+    <string name="title_autoconfigure_edit_profile_dialog">Enter website domain you want to access</string>
+    <string name="hint_autoconfigure_edit_profile_dialog">google.com or https://google.com</string>
+    <string name="positive_autoconfigure_edit_profile_dialog">OK</string>
+    <string name="negative_autoconfigure_edit_profile_dialog">Cancel</string>
     <!-- Exit confirmation dialog -->
     <string name="title_confirmation_edit_profile_dialog">You have unsaved changes</string>
     <string name="message_confirmation_edit_profile_dialog">Save changes?</string>
@@ -89,6 +94,10 @@
     <string name="location_permission_failed">Fail! Grant location permission to get network settings</string>
     <string name="location_disabled_failed">Fail! Enable location to get network settings</string>
     <string name="invalid_profile_id_failed">Fail! Profile id can\'t be empty</string>
+    <string name="no_working_attacks_found">Fail! No working attack found</string>
+    <string name="resolve_domain_failed">Fail! Resolve domain failed. Is website address correct?</string>
+    <string name="config_parse_failed">Fail! Failed to parse output of binary. Contact developer</string>
+    <string name="profile_successfully_configured">Success! Profile configured</string>
 
     <!-- Preferences -->
     <!-- General -->

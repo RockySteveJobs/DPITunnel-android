@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.evgeniy.dpitunnelcli.R
 import ru.evgeniy.dpitunnelcli.domain.entities.*
 import ru.evgeniy.dpitunnelcli.domain.usecases.*
 import ru.evgeniy.dpitunnelcli.utils.AutoConfigOutputFilter
@@ -15,17 +14,13 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
                            private val autoConfigUseCase: IAutoConfigUseCase,
                            private val settingsUseCase: ISettingsUseCase,
                            private val saveProfileUseCase: ISaveProfileUseCase,
-                           private val fetchProfileUseCase: IFetchProfileUseCase,
-                           private val getStringResourceUseCase: IGetStringResourceUseCase
+                           private val fetchProfileUseCase: IFetchProfileUseCase
 ) : ViewModel() {
 
     private val _autoConfigOutput = MutableLiveData<String>()
     val autoConfigOutput: LiveData<String> get() = _autoConfigOutput
 
-    private val _outputFiler = AutoConfigOutputFilter(AutoConfigOutputFilter.ResourceStrings(
-        enterSite = getStringResourceUseCase.getString(R.string.autoconfig_enter_site),
-        configureSuccessful = getStringResourceUseCase.getString(R.string.autoconfig_configuration_successful)
-    )) { input -> autoConfigUseCase.input(input) }
+    private val _outputFiler = AutoConfigOutputFilter { input -> autoConfigUseCase.input(input) }
 
     private var _profileCurrentUnmodified: Profile? = null
     val isModified: Boolean
@@ -43,6 +38,12 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
 
     private val _profile = MutableLiveData<Profile>()
     val profile: LiveData<Profile> get() = _profile
+
+    private val _autoconfigState = MutableLiveData<AutoconfigState>()
+    val autoConfigState: LiveData<AutoconfigState> get() = _autoconfigState
+
+    private val _showLog = MutableLiveData<Boolean>()
+    val showLog: LiveData<Boolean> get() = _showLog
 
     private val _uiState = MutableLiveData<UIState>()
     val uiState: LiveData<UIState> get() = _uiState
@@ -158,9 +159,27 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         viewModelScope.launch(Dispatchers.IO) {
             _outputFiler.configuredProfile.collect { state ->
                 when(state) {
-                    is AutoConfigOutputFilter.ConfiguredProfileState.Success -> loadConfiguredProfile(state.configuredProfile)
-                    is AutoConfigOutputFilter.ConfiguredProfileState.Error -> {}
-                    is AutoConfigOutputFilter.ConfiguredProfileState.InProcess -> {}
+                    is AutoConfigOutputFilter.ConfiguredProfileState.Success -> {
+                        loadConfiguredProfile(state.configuredProfile)
+                        _autoconfigState.postValue(AutoconfigState.Success)
+                    }
+                    is AutoConfigOutputFilter.ConfiguredProfileState.Error -> {
+                        when(state.error) {
+                            AutoConfigOutputFilter.ErrorType.ERROR_NO_ATTACKS_FOUND ->
+                                _autoconfigState.postValue(AutoconfigState.Error(AutoconfigErrorType.ERROR_NO_ATTACKS_FOUND))
+                            AutoConfigOutputFilter.ErrorType.ERROR_RESOLVE_DOMAIN_FAILED ->
+                                _autoconfigState.postValue(AutoconfigState.Error(AutoconfigErrorType.ERROR_RESOLVE_DOMAIN_FAILED))
+                            AutoConfigOutputFilter.ErrorType.ERROR_CONFIG_PARSE_FAILED ->
+                                _autoconfigState.postValue(AutoconfigState.Error(AutoconfigErrorType.ERROR_CONFIG_PARSE_FAILED))
+                        }
+                    }
+                    is AutoConfigOutputFilter.ConfiguredProfileState.InProcess -> {
+                        _autoconfigState.postValue(AutoconfigState.Running(100 * state.progress.ordinal / AutoConfigOutputFilter.Progress.values().size))
+                    }
+                    is AutoConfigOutputFilter.ConfiguredProfileState.Stopped -> {
+                        _autoconfigState.postValue(AutoconfigState.Stopped)
+                        _showLog.postValue(false)
+                    }
                 }
             }
         }
@@ -175,7 +194,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         _profileCurrent?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 if (it.name.isBlank()) {
-                    _uiState.postValue(UIState.Error(ErrorType.ERROR_TYPE_INVALID_PROFILE_ID))
+                    _uiState.postValue(UIState.Error(UIErrorType.ERROR_INVALID_PROFILE_ID))
                     return@launch
                 }
                 saveProfileUseCase.save(it)
@@ -198,8 +217,9 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         }
     }
 
-    fun runAutoConfig(context: Context) {
+    fun runAutoConfig(context: Context, domain: String) {
         _outputFiler.reset(AutoConfigDefaults(
+            domain = domain,
             caBundlePath = settingsUseCase.getCABundlePath()!!,
             dohServer = _profileCurrent?.dohServer ?: Constants.DEFAULT_PROFILE.dohServer!!,
             inBuiltDNS = _profileCurrent?.inBuiltDNSIP?.plus(_profileCurrent?.inBuiltDNSPort?.let { ":$it" } ?: "") ?: Constants.DEFAULT_PROFILE.inBuiltDNSIP!!
@@ -213,21 +233,17 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
                         "--auto"
             )
         ) { throwable ->
-            _autoConfigOutput.postValue(throwable.stackTraceToString())
+            _autoconfigState.postValue(
+                AutoconfigState.Error(
+                    AutoconfigErrorType.ERROR_EXCEPTION,
+                    throwable.stackTraceToString()
+                )
+            )
         }
     }
 
-    fun showFullLog(isShow: Boolean) {
-        viewModelScope.launch(Dispatchers.Default) {
-            if (isShow)
-                _outputFiler.showFull()
-            else
-                _outputFiler.showSimple()
-        }
-    }
-
-    fun autoConfigSendInput(input: String) {
-        _outputFiler.input("$input\n")
+    fun showLog(isShow: Boolean) {
+        _showLog.value = isShow
     }
 
     fun loadProfile(id: Int) {
@@ -244,7 +260,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     }
 
     fun discardUnsaved() {
-        _uiState.postValue(UIState.Finish)
+        _uiState.value = UIState.Finish
     }
 
     private fun loadProfile(profile: Profile?) {
@@ -267,13 +283,27 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         }
     }
 
-    enum class ErrorType {
-        ERROR_TYPE_INVALID_PROFILE_ID
+    enum class AutoconfigErrorType {
+        ERROR_NO_ATTACKS_FOUND,
+        ERROR_RESOLVE_DOMAIN_FAILED,
+        ERROR_CONFIG_PARSE_FAILED,
+        ERROR_EXCEPTION
+    }
+
+    sealed class AutoconfigState {
+        data class Running(val progress: Int): AutoconfigState()
+        object Success: AutoconfigState()
+        data class Error(val error: AutoconfigErrorType, val errorString: String? = null): AutoconfigState()
+        object Stopped: AutoconfigState()
+    }
+
+    enum class UIErrorType {
+        ERROR_INVALID_PROFILE_ID
     }
 
     sealed class UIState {
         object Normal: UIState()
-        data class Error(val error: ErrorType, val errorString: String? = null): UIState()
+        data class Error(val error: UIErrorType, val errorString: String? = null): UIState()
         object Finish: UIState()
     }
 }

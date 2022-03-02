@@ -23,7 +23,8 @@ class AutoConfigUseCase: IAutoConfigUseCase {
     private var _inputFlow = MutableSharedFlow<String>(replay = 0)
     override var inputFlow: SharedFlow<String> = _inputFlow.asSharedFlow()
 
-    override fun run(externalScope: CoroutineScope, cmd: List<String>, exceptionCallBack: (Throwable) -> Unit) {
+    override fun run(externalScope: CoroutineScope, cmd: List<String>,
+                     exceptionCallBack: (Throwable) -> Unit) {
         externalScope.launch(Dispatchers.IO) {
             runCatching {
                 _process = ProcessBuilder(cmd)
