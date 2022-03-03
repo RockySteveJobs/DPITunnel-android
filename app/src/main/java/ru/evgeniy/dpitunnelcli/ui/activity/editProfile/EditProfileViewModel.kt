@@ -80,6 +80,13 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
                 it.desyncFirstAttack = if (value == 0) null else DesyncFirstAttack.values()[value.minus(1)]
             }
         }
+    var autoTtl: Boolean
+        get() = false
+        set(value) {
+            _profileCurrent?.let {
+                it.autoTtl = value
+            }
+        }
     var ttl: String
         get() = ""
         set(value) {

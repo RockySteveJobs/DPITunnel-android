@@ -61,6 +61,7 @@
         <item>Split</item>
         <item>Split + fakes</item>
     </string-array>
+    <string name="desc_auto_ttl_desync_attacks_card">Auto TTL value</string>
     <string name="desc_ttl_desync_attacks_card">TTL for fakes</string>
     <string name="hint_ttl_desync_attacks_card">1 – 255</string>
     <string name="desc_window_size_desync_attacks_card">TCP window size</string>

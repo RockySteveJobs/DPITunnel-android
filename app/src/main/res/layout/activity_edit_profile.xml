@@ -162,6 +162,25 @@
                         tools:ignore="SpeakableTextPresentCheck" />
 
                     <TextView
+                        android:id="@+id/edit_profile_desync_attacks_auto_ttl_desc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/desc_auto_ttl_desync_attacks_card"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintTop_toTopOf="@id/edit_profile_desync_attacks_auto_ttl"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/edit_profile_desync_attacks_auto_ttl"
+                        app:layout_constraintBottom_toBottomOf="@id/edit_profile_desync_attacks_auto_ttl" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/edit_profile_desync_attacks_auto_ttl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/cardview_items_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/edit_profile_desync_attacks_auto_ttl_desc"
+                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_first_level" />
+
+                    <TextView
                         android:id="@+id/edit_profile_desync_attacks_ttl_desc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -181,7 +200,7 @@
                         android:minHeight="@dimen/edittext_min_height"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/edit_profile_desync_attacks_ttl_desc"
-                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_first_level" />
+                        app:layout_constraintTop_toBottomOf="@id/edit_profile_desync_attacks_auto_ttl" />
 
                     <TextView
                         android:id="@+id/edit_profile_desync_attacks_window_size_desc"

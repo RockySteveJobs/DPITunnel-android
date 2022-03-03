@@ -1,5 +1,7 @@
 package ru.evgeniy.dpitunnelcli.utils
 
+import ru.evgeniy.dpitunnelcli.domain.entities.DesyncFirstAttack
+import ru.evgeniy.dpitunnelcli.domain.entities.DesyncZeroAttack
 import ru.evgeniy.dpitunnelcli.domain.entities.Profile
 
 object Constants {
@@ -20,6 +22,7 @@ object Constants {
         bufferSize = null,
         splitPosition = 3,
         splitAtSni = true,
+        autoTtl = true,
         fakePacketsTtl = null,
         windowSize = null,
         windowScaleFactor = null,

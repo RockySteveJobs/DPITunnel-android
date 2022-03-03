@@ -175,10 +175,16 @@ class EditProfileActivity : AppCompatActivity() {
 
         }
 
+        val switchAutoTtl = binding.editProfileDesyncAttacksAutoTtl
+
         val edittextTtl = binding.editProfileDesyncAttacksTtl
         edittextTtl.filters = arrayOf(MinMaxFilter(Constants.TTL_VALUE_RANGE))
         edittextTtl.doAfterTextChanged {
             editProfilesViewModel.ttl = it.toString()
+        }
+        switchAutoTtl.setOnCheckedChangeListener { _, isChecked ->
+            editProfilesViewModel.autoTtl = isChecked
+            edittextTtl.isEnabled = !isChecked
         }
 
         val edittextWindowSize = binding.editProfileDesyncAttacksWindowSize
@@ -296,6 +302,8 @@ class EditProfileActivity : AppCompatActivity() {
             edittextProfileId.setText(profile.name)
             spinnerZeroLevel.setSelection(profile.desyncZeroAttack?.ordinal?.plus(1) ?: 0)
             spinnerFirstLevel.setSelection(profile.desyncFirstAttack?.ordinal?.plus(1) ?: 0)
+            switchAutoTtl.isChecked = profile.autoTtl
+            edittextTtl.isEnabled = !profile.autoTtl
             edittextTtl.setText(profile.fakePacketsTtl?.toString() ?: "")
             edittextWindowSize.setText(profile.windowSize?.toString() ?: "")
             edittextWindowScaleFactor.setText(profile.windowScaleFactor?.toString() ?: "")

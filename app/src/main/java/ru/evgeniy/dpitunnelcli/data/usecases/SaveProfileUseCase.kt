@@ -17,6 +17,7 @@ class SaveProfileUseCase(private val context: Context): ISaveProfileUseCase {
             bufferSize = profile.bufferSize,
             splitPosition = profile.splitPosition,
             splitAtSni = profile.splitAtSni,
+            autoTtl= profile.autoTtl,
             fakePacketsTtl = profile.fakePacketsTtl,
             windowSize = profile.windowSize,
             windowScaleFactor = profile.windowScaleFactor,

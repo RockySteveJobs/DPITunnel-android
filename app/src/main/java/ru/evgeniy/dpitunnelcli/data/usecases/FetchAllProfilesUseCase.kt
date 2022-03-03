@@ -27,6 +27,7 @@ class FetchAllProfilesUseCase(private val context: Context): IFetchAllProfilesUs
                 bufferSize = profile.bufferSize,
                 splitPosition = profile.splitPosition,
                 splitAtSni = profile.splitAtSni,
+                autoTtl= profile.autoTtl,
                 fakePacketsTtl = profile.fakePacketsTtl,
                 windowSize = profile.windowSize,
                 windowScaleFactor = profile.windowScaleFactor,
