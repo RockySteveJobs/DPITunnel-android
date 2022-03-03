@@ -28,8 +28,8 @@ object Constants {
         inBuiltDNSPort = null,
         doh = true,
         dohServer = "https://dns.google/dns-query",
-        desyncAttacks = false,
-        desyncZeroAttack = null,
-        desyncFirstAttack = null
+        desyncAttacks = true,
+        desyncZeroAttack = DesyncZeroAttack.DESYNC_ZERO_FAKE,
+        desyncFirstAttack = DesyncFirstAttack.DESYNC_FIRST_DISORDER_FAKE
     )
 }
