@@ -1,6 +1,6 @@
 <resources>
     <!-- App/Activity names -->
-    <string name="app_name">DPITunnel-cli</string>
+    <string name="app_name">DPI Tunnel</string>
     <string name="title_profiles">Profiles</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_activity_edit_profile">Add profile</string>
@@ -104,7 +104,7 @@
     <!-- General -->
     <string name="preference_category_general">General</string>
     <string name="preference_start_on_boot_title">Start service on boot</string>
-    <string name="preference_start_on_boot_summary">Start DPITunnel after device boot</string>
+    <string name="preference_start_on_boot_summary">Start DPI Tunnel after device boot</string>
     <string name="preference_custom_ca_bundle_title">Use custom CA Bundle</string>
     <string name="preference_custom_ca_bundle_summary">Custom CA Bundle for validating SSL certs</string>
     <string name="preference_ca_bundle_path_title">Import CA Bundle</string>
