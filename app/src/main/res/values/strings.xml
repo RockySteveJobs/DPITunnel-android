@@ -10,10 +10,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <!-- Autoconfig localization-->
-    <string name="autoconfig_enter_site">Enter site you want to unblock:</string>
-    <string name="autoconfig_configuration_successful">Configuration successful!</string>
-
     <!-- Main activity messages -->
     <string name="no_root_failed">Fail! This app requires root access to work!</string>
 
