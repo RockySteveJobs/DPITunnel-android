@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App/Activity names -->
+    <string name="app_name">DPI Tunnel</string>
+    <string name="title_profiles">Профили</string>
+    <string name="title_dashboard">Мониторинг</string>
+    <string name="title_activity_edit_profile">Добавить профиль</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Далее</string>
+    <string name="previous">Назад</string>
+
+    <!-- Main activity messages -->
+    <string name="no_root_failed">Ошибка! Приложению нужны ROOT права для работы!</string>
+
+    <!-- Dashboard fragment -->
+    <string name="title_status_card">Состояние</string>
+    <string name="button_settings">настройки</string>
+    <string name="button_status_start_text">старт</string>
+    <string name="button_status_stop_text">стоп</string>
+    <string name="button_restart">перезапуск</string>
+    <!-- Dashboard fragment messages -->
+    <string name="no_one_profile_failed">Ошибка! Добавьте хотя бы один профиль!</string>
+
+    <!-- Profiles fragment -->
+    <string name="unnamed_profile_name">Безымянный</string>
+    <string name="default_profile_mark"> (По умолчанию)</string>
+    <string name="profile_item_menu_default">По умолчанию</string>
+    <string name="profile_item_menu_rename">Переименовать</string>
+    <string name="profile_item_menu_delete">Удалить</string>
+    <string name="dialog_profile_rename_positive">ОК</string>
+    <string name="dialog_profile_rename_negative">Отмена</string>
+    <string name="dialog_profile_rename_title">Переименование профиля</string>
+
+    <!-- Edit profile activity -->
+    <!-- Toolbar -->
+    <string name="rename_edit_profile_toolbar">Переименовать</string>
+    <!-- Profile id card -->
+    <string name="title_profile_id_card">ID профиля</string>
+    <string name="desc_profile_id_card">Сетевой интерфейс/Wi-Fi сеть</string>
+    <string name="hint_profile_id_card">&lt;net_iface&gt;[:&lt;wifi_net&gt;]|default</string>
+    <string name="button_profile_id_card">Установить из текущего подключения</string>
+    <!-- Desync attacks card -->
+    <string name="title_desync_attacks_card">Атаки десинхронизации</string>
+    <string name="desc_zero_level_desync_attacks_card">Атака 0 уровня</string>
+    <string-array name="zero_attacks">
+        <item>Нет</item>
+        <item>Fake</item>
+        <item>RST</item>
+        <item>RST,ACK</item>
+    </string-array>
+    <string name="desc_first_level_desync_attacks_card">Атака 1 уровня</string>
+    <string-array name="first_attacks">
+        <item>Нет</item>
+        <item>Disorder</item>
+        <item>Disorder + fakes</item>
+        <item>Split</item>
+        <item>Split + fakes</item>
+    </string-array>
+    <string name="desc_auto_ttl_desync_attacks_card">Автоматический подбор TTL</string>
+    <string name="desc_ttl_desync_attacks_card">TTL для поддельных пакетов</string>
+    <string name="hint_ttl_desync_attacks_card">1 – 255</string>
+    <string name="desc_window_size_desync_attacks_card">Размер окна TCP</string>
+    <string name="hint_window_size_desync_attacks_card">1 – 65535</string>
+    <string name="desc_window_scale_factor_desync_attacks_card">Масштабирование окна TCP</string>
+    <string name="hint_window_scale_factor_desync_attacks_card">0 – 14</string>
+    <string name="desc_split_position_desync_attacks_card">Позиция для разбиения запроса</string>
+    <string name="hint_split_position_desync_attacks_card">1 – 65535</string>
+    <string name="desc_split_at_sni_desync_attacks_card">Разбивать ClientHello посередине SNI</string>
+    <string name="desc_show_log_autoconfig">Лог</string>
+    <string name="button_autoconfig_desync_attacks_card">Подобрать настройки</string>
+    <!-- DNS card -->
+    <string name="title_dns_card">DNS</string>
+    <string name="desc_use_doh_dns_card">DNS-over-HTTPS</string>
+    <string name="desc_doh_server_dns_card">DoH сервер</string>
+    <string name="hint_doh_server_dns_card">https://dns.google/dns-query</string>
+    <string name="desc_dns_server_dns_card">DNS сервер</string>
+    <string name="hint_dns_server_dns_card">8.8.8.8</string>
+    <!-- Autoconfigure dialog -->
+    <string name="title_autoconfigure_edit_profile_dialog">Введите адрес заблокированного сайта</string>
+    <string name="hint_autoconfigure_edit_profile_dialog">google.com или https://google.com</string>
+    <string name="positive_autoconfigure_edit_profile_dialog">ОК</string>
+    <string name="negative_autoconfigure_edit_profile_dialog">Отмена</string>
+    <!-- Exit confirmation dialog -->
+    <string name="title_confirmation_edit_profile_dialog">Несохранённые изменения</string>
+    <string name="message_confirmation_edit_profile_dialog">Сохранить?</string>
+    <string name="save_confirmation_edit_profile_dialog">Сохранить</string>
+    <string name="discard_confirmation_edit_profile_dialog">Не сохранять</string>
+    <string name="cancel_confirmation_edit_profile_dialog">Отменить</string>
+    <!-- Edit profile activity messages -->
+    <string name="location_permission_failed">Ошибка! Разрешите доступ к геолокации для получения сетевых настроек</string>
+    <string name="location_disabled_failed">Ошибка! Включите геолокацию в настройках устройства</string>
+    <string name="invalid_profile_id_failed">Ошибка! ID профиля не может быть пустым</string>
+    <string name="no_working_attacks_found">Ошибка! Не удалось подобрать настройки</string>
+    <string name="resolve_domain_failed">Ошибка! Не удалось разрешить адрес сайта. Проверьте адрес сайта</string>
+    <string name="config_parse_failed">Ошибка! Не удалось разобрать вывод программы. Свяжитесь с разработчиком</string>
+    <string name="profile_successfully_configured">Настройки успешно подобраны</string>
+
+    <!-- Preferences -->
+    <!-- General -->
+    <string name="preference_category_general">Общее</string>
+    <string name="preference_start_on_boot_title">Запускать при загрузке устройства</string>
+    <string name="preference_start_on_boot_summary">Запускать DPI Tunnel при загрузке устройства</string>
+    <string name="preference_custom_ca_bundle_title">Использовать пользовательский CA Bundle</string>
+    <string name="preference_custom_ca_bundle_summary">Использовать пользовательский CA Bundle для проверки SSL сертификатов</string>
+    <string name="preference_ca_bundle_path_title">Импортировать CA Bundle</string>
+    <!-- Proxy -->
+    <string name="preference_category_server">Прокси</string>
+    <string name="preference_proxy_ip_title">IP прокси</string>
+    <string name="preference_proxy_ip_summary">IP для запуска прокси сервера. Пр. 127.0.0.1</string>
+    <string name="preference_proxy_port_title">Порт прокси</string>
+    <string name="preference_proxy_port_summary">Порт для запуска прокси сервера. Пр. 8080</string>
+    <string name="preference_proxy_ip_invalid_ip">Неверный IP адрес</string>
+</resources>
