@@ -139,7 +139,7 @@ class AutoConfigOutputFilter(private val _input: (String) -> Unit) {
     private fun parseOptions(): ConfiguredProfile? {
         // 2nd line from end
         _output.lines().let { it.getOrNull(it.size - 2) }?.split(' ')?.let { argsStr ->
-            val configuredProfile = ConfiguredProfile(null, null, null, false, null, null)
+            val configuredProfile = ConfiguredProfile(false, null, null, null, false, null, null)
             val args = Utils.getOpt(argsStr)
             for ((key,value) in args) {
                 when(key) {

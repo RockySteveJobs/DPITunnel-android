@@ -280,6 +280,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     private fun loadConfiguredProfile(configuredProfile: ConfiguredProfile) {
         _profileCurrent?.let {
             val profile = it
+            profile.autoTtl = configuredProfile.autoTtl
             profile.fakePacketsTtl = configuredProfile.fakePacketsTtl
             profile.windowSize = configuredProfile.windowSize
             profile.windowScaleFactor = configuredProfile.windowScaleFactor
