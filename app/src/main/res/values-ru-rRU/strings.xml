@@ -58,6 +58,7 @@
         <item>Split</item>
         <item>Split + fakes</item>
     </string-array>
+    <string name="desc_wrong_seq_desync_attacks_card">Неверный SEQ для поддельных пакетов</string>
     <string name="desc_auto_ttl_desync_attacks_card">Автоматический подбор TTL</string>
     <string name="desc_ttl_desync_attacks_card">TTL для поддельных пакетов</string>
     <string name="hint_ttl_desync_attacks_card">1 – 255</string>

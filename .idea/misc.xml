@@ -12,7 +12,7 @@
         <entry key="app/src/main/res/drawable/ic_more_vert_black_24dp.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/ic_save_black_24dp.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/ic_save_white_24dp.xml" value="0.19" />
-        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.4932795698924731" />
         <entry key="app/src/main/res/layout/activity_edit_profile_content.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3482789855072464" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.3482789855072464" />
@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.3546875" />
         <entry key="app/src/main/res/menu/edit_profile_toolbar_menu.xml" value="0.3536458333333333" />
         <entry key="app/src/main/res/menu/profile_item_menu.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.227" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.28703703703703703" />
       </map>
     </option>

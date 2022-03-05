@@ -1,6 +1,7 @@
 package ru.evgeniy.dpitunnelcli.domain.entities
 
 data class ConfiguredProfile(
+    var wrongSeq: Boolean,
     var autoTtl: Boolean,
     var fakePacketsTtl: Int?,
     var windowSize: Int?,

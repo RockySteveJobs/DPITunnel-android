@@ -22,6 +22,7 @@ object Constants {
         bufferSize = null,
         splitPosition = 3,
         splitAtSni = true,
+        wrongSeq = false,
         autoTtl = true,
         fakePacketsTtl = null,
         windowSize = 1,

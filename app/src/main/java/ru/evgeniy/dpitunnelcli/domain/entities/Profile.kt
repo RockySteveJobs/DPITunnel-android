@@ -20,6 +20,7 @@ data class Profile(
     var bufferSize: Int?,
     var splitPosition: Int?,
     var splitAtSni: Boolean,
+    var wrongSeq: Boolean,
     var autoTtl: Boolean,
     var fakePacketsTtl: Int?,
     var windowSize: Int?,
@@ -42,6 +43,8 @@ data class Profile(
             stringBuilder.append("--profile \"$name\"")
         bufferSize?.let { stringBuilder.append(" --buffer-size \"$it\"") }
         splitPosition?.let { stringBuilder.append(" --split-position \"$it\"") }
+        if (wrongSeq)
+            stringBuilder.append(" --wrong-seq")
         if (autoTtl)
             stringBuilder.append(" --auto-ttl \"1-4-10\"")
         fakePacketsTtl?.let { stringBuilder.append(" --ttl \"$it\"") }

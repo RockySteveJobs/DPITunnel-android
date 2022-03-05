@@ -28,12 +28,14 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         "app_database"
                     )
+                        .fallbackToDestructiveMigration()
                         .addCallback(object : Callback() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
+                                super.onCreate(db)
                                 prepopulateDb(getInstance(context))
                             }
                         })
-                        .fallbackToDestructiveMigration().build()
+                        .build()
 
                     INSTANCE = instance
                 }
@@ -51,6 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
                     bufferSize = null,
                     splitPosition = 3,
                     splitAtSni = true,
+                    wrongSeq = false,
                     autoTtl = true,
                     fakePacketsTtl = null,
                     windowSize = 1,

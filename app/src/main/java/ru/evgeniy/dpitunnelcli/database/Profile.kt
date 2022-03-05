@@ -25,6 +25,7 @@ data class Profile(
     @ColumnInfo(name = "buffer_size") val bufferSize: Int?,
     @ColumnInfo(name = "split_position") val splitPosition: Int?,
     @ColumnInfo(name = "split_at_sni") val splitAtSni: Boolean,
+    @ColumnInfo(name = "wrong_seq") val wrongSeq: Boolean,
     @ColumnInfo(name = "auto_ttl") var autoTtl: Boolean,
     @ColumnInfo(name = "fake_packets_ttl") val fakePacketsTtl: Int?,
     @ColumnInfo(name = "window_size") val windowSize: Int?,

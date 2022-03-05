@@ -80,6 +80,13 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
                 it.desyncFirstAttack = if (value == 0) null else DesyncFirstAttack.values()[value.minus(1)]
             }
         }
+    var wrongSeq: Boolean
+        get() = false
+        set(value) {
+            _profileCurrent?.let {
+                it.wrongSeq = value
+            }
+        }
     var autoTtl: Boolean
         get() = false
         set(value) {
@@ -280,6 +287,7 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     private fun loadConfiguredProfile(configuredProfile: ConfiguredProfile) {
         _profileCurrent?.let {
             val profile = it
+            profile.wrongSeq = configuredProfile.wrongSeq
             profile.autoTtl = configuredProfile.autoTtl
             profile.fakePacketsTtl = configuredProfile.fakePacketsTtl
             profile.windowSize = configuredProfile.windowSize
