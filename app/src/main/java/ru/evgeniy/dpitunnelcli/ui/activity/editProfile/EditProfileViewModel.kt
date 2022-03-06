@@ -221,8 +221,13 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         viewModelScope.launch(Dispatchers.IO) {
             _profileCurrent?.let {
                 val profile = it
-                profile.name = fetchDefaultIfaceWifiAPUseCase.fetch(context).let {
-                    it.first?.plus(it.second?.let {
+                profile.name = fetchDefaultIfaceWifiAPUseCase.fetch(context).let { it ->
+                    var defaultIfaceWifi = it
+                    defaultIfaceWifi.first?.let {
+                        if (it.startsWith(RMNET_IFACE_NAME) && it.last().isDigit())
+                            defaultIfaceWifi = defaultIfaceWifi.copy(first = it.dropLastWhile { it.isDigit() }.plus('*'))
+                    }
+                    defaultIfaceWifi.first?.plus(defaultIfaceWifi.second?.let {
                         ":$it"
                     } ?: "") ?: ""
                 }
@@ -321,5 +326,9 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
         object Normal: UIState()
         data class Error(val error: UIErrorType, val errorString: String? = null): UIState()
         object Finish: UIState()
+    }
+
+    companion object {
+        private const val RMNET_IFACE_NAME = "rmnet"
     }
 }
