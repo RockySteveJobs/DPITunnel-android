@@ -15,10 +15,13 @@ class ProfilesViewModel(private val fetchAllProfilesUseCase: IFetchAllProfilesUs
                         private val settingsUseCase: ISettingsUseCase
 ) : ViewModel() {
 
-    val profiles: LiveData<List<Profile>>
+    private val _profiles = MediatorLiveData<List<Profile>>()
+    val profiles: LiveData<List<Profile>> = _profiles
 
     init {
-        profiles = fetchAllProfilesUseCase.fetchLive()
+        _profiles.addSource(fetchAllProfilesUseCase.fetchLive()) {
+            _profiles.value = it
+        }
     }
 
     fun delete(id: Int) {
@@ -36,6 +39,7 @@ class ProfilesViewModel(private val fetchAllProfilesUseCase: IFetchAllProfilesUs
     fun setDefaultProfile(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsUseCase.setDefaultProfileId(id)
+            _profiles.postValue(fetchAllProfilesUseCase.fetch())
         }
     }
 }
