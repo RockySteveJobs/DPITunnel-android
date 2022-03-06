@@ -1,6 +1,8 @@
 package ru.evgeniy.dpitunnelcli.data.usecases
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import ru.evgeniy.dpitunnelcli.database.AppDatabase
 import ru.evgeniy.dpitunnelcli.domain.entities.DesyncFirstAttack
 import ru.evgeniy.dpitunnelcli.domain.entities.DesyncZeroAttack
@@ -13,11 +15,22 @@ class FetchAllProfilesUseCase(private val context: Context): IFetchAllProfilesUs
     private val profileDao = AppDatabase.getInstance(context).profileDao()
     private val appPreferences = AppPreferences.getInstance(context)
 
-    override suspend fun fetch(): List<Profile> {
+    override suspend fun fetch(): List<Profile> = convertList(profileDao.getAll())
+
+    override fun fetchLive(): LiveData<List<Profile>> {
+        val mediatorLiveData = MediatorLiveData<List<Profile>>()
+        val profilesLive = profileDao.getAllLive()
+        mediatorLiveData.addSource(profilesLive) {
+            mediatorLiveData.value = convertList(it)
+        }
+        return mediatorLiveData
+    }
+
+    private fun convertList(list: List<ru.evgeniy.dpitunnelcli.database.Profile>): List<Profile> {
         val newList = mutableListOf<Profile>()
         val defaultProfileId = appPreferences.defaultProfileId
         var defaultExist = false
-        profileDao.getAll().forEach { profile ->
+        list.forEach { profile ->
             if (profile.id == defaultProfileId)
                 defaultExist = true
             newList += Profile(

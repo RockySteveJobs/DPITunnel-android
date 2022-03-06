@@ -1,11 +1,15 @@
 package ru.evgeniy.dpitunnelcli.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
 interface ProfileDao {
     @Query("SELECT * FROM profiles_table")
     suspend fun getAll(): List<Profile>
+
+    @Query("SELECT * FROM profiles_table")
+    fun getAllLive(): LiveData<List<Profile>>
 
     @Query("SELECT * FROM profiles_table WHERE id = :id")
     suspend fun findById(id: Int): Profile?

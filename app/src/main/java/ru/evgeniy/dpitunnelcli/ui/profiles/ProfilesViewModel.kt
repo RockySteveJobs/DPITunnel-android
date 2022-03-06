@@ -15,41 +15,27 @@ class ProfilesViewModel(private val fetchAllProfilesUseCase: IFetchAllProfilesUs
                         private val settingsUseCase: ISettingsUseCase
 ) : ViewModel() {
 
-    private val _profiles = MutableLiveData<List<Profile>>()
-    val profiles: LiveData<List<Profile>> get() = _profiles
+    val profiles: LiveData<List<Profile>>
 
     init {
-        fetchProfiles()
-    }
-
-    fun update() {
-        fetchProfiles()
+        profiles = fetchAllProfilesUseCase.fetchLive()
     }
 
     fun delete(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteProfileUseCase.delete(id)
-            fetchProfiles()
         }
     }
 
     fun rename(id: Int, newTitle: String) {
         viewModelScope.launch(Dispatchers.IO) {
             renameProfileUseCase.rename(id, newTitle)
-            fetchProfiles()
         }
     }
 
     fun setDefaultProfile(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsUseCase.setDefaultProfileId(id)
-            update()
-        }
-    }
-
-    private fun fetchProfiles() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _profiles.postValue(fetchAllProfilesUseCase.fetch())
         }
     }
 }

@@ -20,27 +20,23 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
+            val instance = INSTANCE
+            if (instance != null) return instance
             synchronized(this) {
-                var instance = INSTANCE
-                if(instance == null) {
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        "app_database"
-                    )
-                        .fallbackToDestructiveMigration()
-                        .addCallback(object : Callback() {
-                            override fun onCreate(db: SupportSQLiteDatabase) {
-                                super.onCreate(db)
-                                prepopulateDb(getInstance(context))
-                            }
-                        })
-                        .build()
-
-                    INSTANCE = instance
-                }
-
-                return instance
+                INSTANCE = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDatabase::class.java,
+                    "app_database"
+                )
+                    .fallbackToDestructiveMigration()
+                    .addCallback(object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            prepopulateDb(getInstance(context))
+                        }
+                    })
+                    .build()
+                return INSTANCE as AppDatabase
             }
         }
 

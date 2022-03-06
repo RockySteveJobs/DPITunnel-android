@@ -97,7 +97,7 @@ class ProfilesFragment : Fragment() {
 
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            profilesViewModel.update()
+
         }
     }
 
