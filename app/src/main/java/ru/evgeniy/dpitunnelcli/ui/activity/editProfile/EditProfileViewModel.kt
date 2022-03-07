@@ -97,33 +97,29 @@ class EditProfileViewModel(private val fetchDefaultIfaceWifiAPUseCase: IFetchDef
     var ttl: String
         get() = ""
         set(value) {
-            if (value.isEmpty()) return
             _profileCurrent?.let {
-                it.fakePacketsTtl = value.toInt()
+                it.fakePacketsTtl = value.ifEmpty { null }?.toInt()
             }
         }
     var windowSize: String
         get() = ""
         set(value) {
-            if (value.isEmpty()) return
             _profileCurrent?.let {
-                it.windowSize = value.toInt()
+                it.windowSize = value.ifEmpty { null }?.toInt()
             }
         }
     var windowScaleFactor: String
         get() = ""
         set(value) {
-            if (value.isEmpty()) return
             _profileCurrent?.let {
-                it.windowScaleFactor = value.toInt()
+                it.windowScaleFactor = value.ifEmpty { null }?.toInt()
             }
         }
     var splitPosition: String
         get() = ""
         set(value) {
-            if (value.isEmpty()) return
             _profileCurrent?.let {
-                it.splitPosition = value.toInt()
+                it.splitPosition = value.ifEmpty { null }?.toInt()
             }
         }
     var splitAtSNI: Boolean
